@@ -3,5 +3,5 @@ import { LoginUserDto } from './loginUserDto';
 
 export class CreateUserDto extends LoginUserDto {
   @IsNotEmpty()
-  username: string;
+  readonly username: string;
 }
