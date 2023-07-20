@@ -1,4 +1,5 @@
 import { TagEntity } from '@app/tag/tag.entity';
+import { TodoEntity } from '@app/todo/todo.entity';
 import { hash } from 'bcrypt';
 import {
   BeforeInsert,
@@ -29,4 +30,7 @@ export class UserEntity {
 
   @OneToMany(() => TagEntity, (tag) => tag.creator)
   tags: TagEntity[];
+
+  @OneToMany(() => TodoEntity, (todo) => todo.tag)
+  todo: TodoEntity[];
 }

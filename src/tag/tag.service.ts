@@ -1,16 +1,31 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TagEntity } from './tag.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CreateTagDto } from './dto/createTag.dto';
 import { UserEntity } from '@app/user/user.entity';
 
 @Injectable()
 export class TagService {
   constructor(
+    private dataSource: DataSource,
     @InjectRepository(TagEntity)
     private readonly tagRepository: Repository<TagEntity>,
   ) {}
+
+  async getAllTags(currentUserId: number): Promise<TagEntity[]> {
+    const queryBuilder = this.dataSource
+      .getRepository(TagEntity)
+      .createQueryBuilder('tag');
+
+    queryBuilder.andWhere('tag.creatorId = :id', {
+      id: currentUserId,
+    });
+
+    const tags = await queryBuilder.getMany();
+
+    return tags;
+  }
 
   async createTag(
     createTagDto: CreateTagDto,

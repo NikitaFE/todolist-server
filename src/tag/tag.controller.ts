@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   UseGuards,
@@ -18,6 +19,12 @@ import { UserEntity } from '@app/user/user.entity';
 @Controller('tags')
 export class TagController {
   constructor(private readonly tagService: TagService) {}
+
+  @Get()
+  @UseGuards(AuthGuard)
+  async getAllTags(@User('id') currentUserId: number): Promise<TagEntity[]> {
+    return this.tagService.getAllTags(currentUserId);
+  }
 
   @Post('create')
   @UseGuards(AuthGuard)
